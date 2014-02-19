@@ -8,6 +8,7 @@ package
     import loom2d.display.Image;
     import loom2d.textures.Texture;
     import loom2d.math.Point;
+    import loom2d.math.Rectangle;
     import loom.platform.Timer;
 
     import org.gestouch.events.GestureEvent;
@@ -39,10 +40,8 @@ package
 
         override public function run():void
         {
-            // Comment out this line to turn off automatic scaling.
             stage.scaleMode = StageScaleMode.LETTERBOX;
 
-            // Setup anything else, like UI, or game objects.
             var bg = new Image(Texture.fromAsset("assets/bg.png"));
             bg.width = stage.stageWidth;
             bg.height = stage.stageHeight;
@@ -84,20 +83,20 @@ package
 
         public function onTick():void
         {
-            var characterCollider:CircleColliderComponent = character.lookupComponentByName("collider") as CircleColliderComponent;
+            var characterCircle:Circle = character.getProperty("@collider.circle") as Circle;
             for each (var pipe:Pipe in pipes)
             {
                 // If character hit pipe, game is over
-                var pipeCollider:RectangleColliderComponent = pipe.lookupComponentByName("collider") as RectangleColliderComponent;
-                if (Collision.circleToAABB(characterCollider.circle, pipeCollider.rectangle))
+                var pipeRect:Rectangle = pipe.getProperty("@collider.rectangle") as Rectangle;
+                if (Collision.circleToAABB(characterCircle, pipeRect))
                 {
                     resetGame();
                     return;
                 }
 
                 // Despawn pipes that have moved offscreen
-                var pipeTransform:TransformComponent = pipe.lookupComponentByName("transform") as TransformComponent;
-                if (pipeTransform.x < -Pipe.PIPE_WIDTH)
+                var pipeY:Number = pipe.getProperty("@transform.x") as Number;
+                if (pipeY < -Pipe.PIPE_WIDTH)
                 {
                     pipes.remove(pipe);
                     pipe.destroy();
@@ -105,8 +104,8 @@ package
             }
 
             // If character hit ground, game is over
-            var characterTransform:TransformComponent = character.lookupComponentByName("transform") as TransformComponent;
-            if (characterTransform.y + characterCollider.circle.radius > GROUND_Y)
+            var charY:Number = character.getProperty("@transform.y") as Number;
+            if (charY + characterCircle.radius > GROUND_Y)
             {
                 resetGame();
             }
