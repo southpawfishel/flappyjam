@@ -1,0 +1,3 @@
+[submodule "lib/gestouch"]
+	path = lib/gestouch
+	url = git@github.com:southpawfishel/Gestouch-Loom2D.git
