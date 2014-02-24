@@ -6,7 +6,18 @@ package
     {
         public static var SPEED = 150;
 
+        private var _passedPlayer:Boolean = false;
         private var _transform:TransformComponent = null;
+
+        public function get passedPlayer():Boolean
+        {
+            return _passedPlayer;
+        }
+
+        public function set passedPlayer(val:Boolean):void
+        {
+            _passedPlayer = val;
+        }
 
         public override function onAdd():Boolean
         {

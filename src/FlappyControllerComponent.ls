@@ -10,7 +10,7 @@ package
     public class FlappyControllerComponent extends TickedComponent
     {
         private static var GRAVITY:Number = 1600;
-        private static var JUMP_VELOCITY:Number = -500;
+        private static var JUMP_VELOCITY:Number = -475;
         private static var OFFSCREEN_CUTOFF_Y:Number = -50;
 
         private var _started:Boolean = false;

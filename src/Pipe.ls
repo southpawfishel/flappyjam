@@ -24,7 +24,7 @@ package
             addComponent(_transform, "transform");
 
             _image = new ImageComponent(_parentLayer);
-            _image.texture = "assets/pipe.png";
+            _image.texture = "assets/pipe_top.png";
             _image.addBinding("position", "@transform.position");
             addComponent(_image, "image");
 
