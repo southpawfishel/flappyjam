@@ -22,22 +22,31 @@ package
             super.initialize(objectName);
             
             _transform = new TransformComponent();
+            addComponent(_transform, "transform");
             _transform.x = Loom2D.stage.stageWidth / 4;
             _transform.y = Loom2D.stage.stageHeight / 2;
-            addComponent(_transform, "transform");
 
             _physics = new CharacterPhysicsComponent();
             addComponent(_physics, "physics");
 
             _image = new ImageComponent(_parentLayer);
-            _image.texture = "assets/circle30.png";
-            _image.center();
-            _image.addBinding("position", "@transform.position");
             addComponent(_image, "image");
+            _image.addBinding("position", "@transform.position");
+            _image.texture = "assets/corgi1.png";
+            _image.pivotX = _image.width - 20;
+            _image.pivotY = _image.height / 2;
+            //_image.center();
+
+            // var colliderImage = new ImageComponent(_parentLayer);
+            // addComponent(colliderImage, "colliderImage");
+            // colliderImage.texture = "assets/circle30.png";
+            // colliderImage.center();
+            // colliderImage.alpha = 0.5;
+            // colliderImage.addBinding("position", "@transform.position");
 
             _collider = new CircleColliderComponent(15);
-            _collider.addBinding("position", "@transform.position");
             addComponent(_collider, "collider");
+            _collider.addBinding("position", "@transform.position");
 
             _controller = new FlappyControllerComponent();
             addComponent(_controller, "controller");

@@ -16,6 +16,18 @@ package
         private var _centered:Boolean;
         private var _pivotX:Number = 0;
         private var _pivotY:Number = 0;
+
+        public function set texture(tex:String):void
+        {
+            _texture = Texture.fromAsset(tex);
+            _texture.smoothing = 0;
+
+            if (_image)
+            {
+                _image.texture = _texture;
+                _image.readjustSize();
+            }
+        }
         
         public function set x(value:int):void
         {
@@ -42,15 +54,43 @@ package
             }
         }
 
-        public function set texture(tex:String):void
+        public function set alpha(value:Number):void
         {
-            _texture = Texture.fromAsset(tex);
-            _texture.smoothing = 0;
-
             if (_image)
             {
-                _image.texture = _texture;
-                _image.readjustSize();
+                _image.alpha = value;
+            }
+        }
+
+        public function get width():Number
+        {
+            if (_image)
+            {
+                return _image.width;
+            }
+        }
+
+        public function get height():Number
+        {
+            if (_image)
+            {
+                return _image.height;
+            }
+        }
+
+        public function set width(val:Number):void
+        {
+            if (_image)
+            {
+                _image.width = val;
+            }
+        }
+
+        public function set height(val:Number):void
+        {
+            if (_image)
+            {
+                _image.height = val;
             }
         }
 
@@ -61,6 +101,16 @@ package
             {
                 _image.center();
             }
+        }
+
+        public function get pivotX():Number
+        {
+            return _pivotX;
+        }
+
+        public function get pivotY():Number
+        {
+            return _pivotY;
         }
 
         public function set pivotX(val:Number):void
@@ -78,6 +128,14 @@ package
             if (_image)
             {
                 _image.pivotY = val;
+            }
+        }
+
+        public function set rotation(angle:Number):void
+        {
+            if (_image)
+            {
+                _image.rotation = angle;
             }
         }
 
