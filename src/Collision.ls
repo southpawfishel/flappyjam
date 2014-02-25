@@ -5,103 +5,69 @@ package
 
     public class Circle
     {
-        private var _center:Point;
-        private var _radius:Number;
+        public var center:Point;
+        public var radius:Number;
 
         public function Circle(x:Number, y:Number, r:Number)
         {
-            _center = new Point(x, y);
-            _radius = r;
-        }
-
-        public function set x(newX:Number)
-        {
-            _center.x = newX;
-        }
-
-        public function get x():Number
-        {
-            return _center.x;
-        }
-
-        public function set y(newY:Number)
-        {
-            _center.y = newY;
-        }
-
-        public function get y():Number
-        {
-            return _center.y;
-        }
-
-        public function get center():Point
-        {
-            return _center;
-        }
-
-        public function set center(p:Point):void
-        {
-            _center = p;
-        }
-
-        public function get radius():Number
-        {
-            return _radius;
+            center = new Point(x, y);
+            radius = r;
         }
     }
 
     public static class Collision
     {
+        public static var point:Point = new Point(0,0);
+
         public static function circleToAABB(c:Circle, aabb:Rectangle):Boolean
         {
-            var point:Point = new Point(0,0);
-
             if (aabb.containsPoint(c.center))
             {
                 return true;
             }
 
             // Top edge
-            var xWithinRange:Boolean = (aabb.left < c.x) && (c.x < aabb.right);
-            var yWithinRange:Boolean = Math.abs(aabb.top - c.y) < c.radius;
+            var xWithinRange:Boolean = (aabb.left < c.center.x) && (c.center.x < aabb.right);
+            var yWithinRange:Boolean = Math.abs(aabb.top - c.center.y) < c.radius;
             if (xWithinRange && yWithinRange)
             {
                 return true;
             }
 
             // Bottom edge
-            yWithinRange = Math.abs(aabb.bottom - c.y) < c.radius;
+            yWithinRange = Math.abs(aabb.bottom - c.center.y) < c.radius;
             if (xWithinRange && yWithinRange)
             {
                 return true;
             }
 
             // Left edge
-            xWithinRange = Math.abs(aabb.left - c.x) < c.radius;
-            yWithinRange = (aabb.top < c.y) && (c.y < aabb.bottom);
+            xWithinRange = Math.abs(aabb.left - c.center.x) < c.radius;
+            yWithinRange = (aabb.top < c.center.y) && (c.center.y < aabb.bottom);
             if (xWithinRange && yWithinRange)
             {
                 return true;
             }
 
             // Right edge
-            xWithinRange = Math.abs(aabb.right - c.x) < c.radius;
+            xWithinRange = Math.abs(aabb.right - c.center.x) < c.radius;
             if (xWithinRange && yWithinRange)
             {
                 return true;
             }
 
+            var radiusSquared = c.radius * c.radius;
             // Top left corner
             point.x = aabb.left;
             point.y = aabb.top;
-            if (Point.distanceSquared(c.center, point) < (c.radius * c.radius))
+            if (Point.distanceSquared(c.center, point) < radiusSquared)
             {
                 return true;
             }
 
             // Top right corner
             point.x = aabb.right;
-            if (Point.distanceSquared(c.center, point) < (c.radius * c.radius))
+            if (Point.distanceSquared(c.center, point) < radiusSquared)
             {
                 return true;
             }
@@ -109,14 +75,14 @@ package
             // Bottom left corner
             point.x = aabb.left;
             point.y = aabb.bottom;
-            if (Point.distanceSquared(c.center, point) < (c.radius * c.radius))
+            if (Point.distanceSquared(c.center, point) < radiusSquared)
             {
                 return true;
             }
 
             // Bottom right corner
             point.x = aabb.right;
-            if (Point.distanceSquared(c.center, point) < (c.radius * c.radius))
+            if (Point.distanceSquared(c.center, point) < radiusSquared)
             {
                 return true;
             }

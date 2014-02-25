@@ -16,11 +16,32 @@ package
         protected var _collider:RectangleColliderComponent = null;
         protected var _mover:PipeMoverComponent = null;
 
+        public function get transform():TransformComponent
+        {
+            return _transform;
+        }
+
+        public function get image():ImageComponent
+        {
+            return _image;
+        }
+
+        public function get collider():RectangleColliderComponent
+        {
+            return _collider;
+        }
+
+        public function get mover():PipeMoverComponent
+        {
+            return _mover;
+        }
+
         public override function initialize(objectName:String = null):void
         {
             super.initialize(objectName);
             
             _transform = new TransformComponent();
+            _transform.x = -PIPE_WIDTH;
             addComponent(_transform, "transform");
 
             _image = new ImageComponent(_parentLayer);

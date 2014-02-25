@@ -9,12 +9,12 @@ package
 
         public function set x(newX:Number)
         {
-            _collider.x = newX;
+            _collider.center.x = newX;
         }
 
         public function set y(newY:Number)
         {
-            _collider.y = newY;
+            _collider.center.y = newY;
         }
 
         public function set position(p:Point)

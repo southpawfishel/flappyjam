@@ -6,8 +6,9 @@ package
     {
         public static var SPEED = 150;
 
-        private var _passedPlayer:Boolean = false;
+        private var _passedPlayer:Boolean = true;
         private var _transform:TransformComponent = null;
+        public var offscreen:Boolean = true;
 
         public function get passedPlayer():Boolean
         {
@@ -35,6 +36,11 @@ package
 
         private function onTick():void
         {
+            if (offscreen)
+            {
+                return;
+            }
+
             static var secondsPerTick = timeManager.msPerTick / 1000;
 
             _transform.x -= SPEED * secondsPerTick;

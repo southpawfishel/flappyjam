@@ -33,7 +33,8 @@ package
         var pipeLayer:Sprite = null;
 
         var character:Character = null;
-        var pipes:Vector.<Pipe> = new Vector.<Pipe>();
+        var activePipes:Vector.<Pipe> = new Vector.<Pipe>();
+        var deadPipes:Vector.<Pipe> = new Vector.<Pipe>();
 
         var started:Boolean = false;
         var tapRecognizer:TapGesture = null;
@@ -72,13 +73,18 @@ package
             groundLayer.addChild(ground);
 
             scoreLabel = new SimpleLabel("assets/Curse-hd.fnt", stage.stageWidth, 50);
-            scoreLabel.text = "0";
             uiLayer.addChild(scoreLabel);
+            setScore(0);
 
             character = new Character();
             character.owningGroup = group;
             character.initialize();
 
+            // Set up initial pipes
+            for (var i = 0; i < 4; ++i)
+            {
+                deadPipes.pushSingle(newPipe());
+            }
             pipeSpawnTimer = new Timer(FIRST_PIPE_TIME);
             pipeSpawnTimer.onComplete += spawnPipe;
 
@@ -93,43 +99,49 @@ package
         {
             var scoredThisFrame:Boolean = false;
 
-            var characterCircle:Circle = character.getProperty("@collider.circle") as Circle;
-            var charX:Number = character.getProperty("@transform.x") as Number;
+            var characterCircle:Circle = character.collider.circle;
+            var charX:Number = character.transform.x;
 
-            for each (var pipe:Pipe in pipes)
+            for each (var pipe:Pipe in activePipes)
             {
-                // If character hit pipe, game is over
-                var pipeRect:Rectangle = pipe.getProperty("@collider.rectangle") as Rectangle;
-                if (Collision.circleToAABB(characterCircle, pipeRect))
+                if (pipe.mover.passedPlayer)
                 {
-                    resetGame();
-                    return;
-                }
-
-                // Score pipes that have passed the player
-                var pipeX:Number = pipe.getProperty("@transform.x") as Number;
-                var pipeCounted:Boolean = pipe.getProperty("@mover.passedPlayer") as Boolean;
-                var passedPlayer = pipeX + Pipe.PIPE_WIDTH < charX - characterCircle.radius;
-                if (!pipeCounted && passedPlayer)
-                {
-                    pipe.setProperty("@mover.passedPlayer", true);
-                    if (!scoredThisFrame)
+                    // Despawn pipes that have moved offscreen
+                    if (pipe.transform.x < -Pipe.PIPE_WIDTH)
                     {
-                        scoredThisFrame = true;
-                        onPassedPipe();
+                        pipe.mover.offscreen = true;
+                        deadPipes.pushSingle(pipe);
+                        activePipes.remove(pipe);
                     }
                 }
-
-                // Despawn pipes that have moved offscreen
-                if (pipeX < -Pipe.PIPE_WIDTH)
+                else
                 {
-                    pipes.remove(pipe);
-                    pipe.destroy();
+                    // If character hit pipe, game is over
+                    var pipeRect:Rectangle = pipe.collider.rectangle;
+                    if (Collision.circleToAABB(characterCircle, pipeRect))
+                    {
+                        resetGame();
+                        return;
+                    }
+
+                    // Score pipes that have passed the player
+                    var pipeX:Number = pipe.transform.x;
+                    var pipeCounted:Boolean = pipe.mover.passedPlayer;
+                    var passedPlayer = pipeX + Pipe.PIPE_WIDTH < charX - characterCircle.radius;
+                    if (!pipeCounted && passedPlayer)
+                    {
+                        pipe.mover.passedPlayer = true;
+                        if (!scoredThisFrame)
+                        {
+                            scoredThisFrame = true;
+                            onPassedPipe();
+                        }
+                    }
                 }
             }
 
             // If character hit ground, game is over
-            var charY:Number = character.getProperty("@transform.y") as Number;
+            var charY:Number = character.transform.y;
             if (charY + characterCircle.radius > GROUND_Y)
             {
                 resetGame();
@@ -162,8 +174,7 @@ package
         {
             started = true;
 
-            score = 0;
-            scoreLabel.text = "0";
+            setScore(0);
 
             var characterController:FlappyControllerComponent = character.lookupComponentByName("controller") as FlappyControllerComponent;
             characterController.start();
@@ -178,11 +189,14 @@ package
             var characterController:FlappyControllerComponent = character.lookupComponentByName("controller") as FlappyControllerComponent;
             characterController.reset();
 
-            for each (var pipe:Pipe in pipes)
+            for each (var pipe in activePipes)
             {
-                pipe.destroy();
+                pipe.mover.offscreen = true;
+                pipe.mover.passedPlayer = true; 
+                pipe.transform.x = stage.stageWidth;
+                deadPipes.pushSingle(pipe);
             }
-            pipes.clear();
+            activePipes.clear();
 
             pipeSpawnTimer.stop();
             pipeSpawnTimer.delay = FIRST_PIPE_TIME;
@@ -190,7 +204,12 @@ package
 
         public function onPassedPipe():void
         {
-            ++score;
+            setScore(score+1);
+        }
+
+        public function setScore(newScore:Number)
+        {
+            score = newScore;
             scoreLabel.text = score.toFixed(0);
         }
 
@@ -198,27 +217,48 @@ package
         {
             var pipeY = Math.randomRange(PIPE_TOP_Y, PIPE_BOTTOM_Y);
 
-            var topPipe = new Pipe();
-            topPipe.owningGroup = group;
-            topPipe.initialize();
-            topPipe.setProperty("@transform.x", stage.stageWidth);
-            topPipe.setProperty("@transform.y", pipeY - (PIPE_GAP / 2) - Pipe.PIPE_HEIGHT);
-            topPipe.setProperty("@image.x", topPipe.getProperty("@transform.x"));
-            topPipe.setProperty("@image.y", topPipe.getProperty("@transform.y"));
-            pipes.pushSingle(topPipe);
+            var topPipe = getOrDequeuePipe();
+            topPipe.transform.x = stage.stageWidth;
+            topPipe.transform.y = pipeY - (PIPE_GAP / 2) - Pipe.PIPE_HEIGHT;
+            topPipe.image.x = topPipe.transform.x;
+            topPipe.image.y = topPipe.transform.y;
+            topPipe.image.texture = "assets/pipe_top.png";
+            topPipe.mover.passedPlayer = false;
+            topPipe.mover.offscreen = false;
+            activePipes.pushSingle(topPipe);
 
-            var bottomPipe = new Pipe();
-            bottomPipe.owningGroup = group;
-            bottomPipe.initialize();
-            bottomPipe.setProperty("@transform.x", stage.stageWidth);
-            bottomPipe.setProperty("@transform.y", pipeY + (PIPE_GAP / 2));
-            bottomPipe.setProperty("@image.x", bottomPipe.getProperty("@transform.x"));
-            bottomPipe.setProperty("@image.y", bottomPipe.getProperty("@transform.y"));
-            bottomPipe.setProperty("@image.texture", "assets/pipe_bottom.png");
-            pipes.pushSingle(bottomPipe);
+            var bottomPipe = getOrDequeuePipe();
+            bottomPipe.transform.x = stage.stageWidth;
+            bottomPipe.transform.y = pipeY + (PIPE_GAP / 2);
+            bottomPipe.image.x = bottomPipe.transform.x;
+            bottomPipe.image.y = bottomPipe.transform.y;
+            bottomPipe.image.texture = "assets/pipe_bottom.png";
+            bottomPipe.mover.passedPlayer = false;
+            bottomPipe.mover.offscreen = false;
+            activePipes.pushSingle(bottomPipe);
 
             pipeSpawnTimer.delay = PIPE_INTERVAL;
             pipeSpawnTimer.start();
+        }
+
+        private function getOrDequeuePipe():Pipe
+        {
+            if (deadPipes.length == 0)
+            {
+                return newPipe();
+            }
+            else
+            {
+                return deadPipes.pop() as Pipe;
+            }
+        }
+
+        private function newPipe():Pipe
+        {
+            var pipe = new Pipe();
+            pipe.owningGroup = group;
+            pipe.initialize();
+            return pipe;
         }
     }
 }

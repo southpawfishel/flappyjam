@@ -17,6 +17,31 @@ package
         protected var _image:ImageComponent = null;
         protected var _controller:FlappyControllerComponent = null;
 
+        public function get transform():TransformComponent
+        {
+            return _transform;
+        }
+
+        public function get physics():CharacterPhysicsComponent
+        {
+            return _physics;
+        }
+
+        public function get collider():CircleColliderComponent
+        {
+            return _collider;
+        }
+
+        public function get image():ImageComponent
+        {
+            return _image;
+        }
+
+        public function get controller():FlappyControllerComponent
+        {
+            return _controller;
+        }
+
         public override function initialize(objectName:String = null):void
         {
             super.initialize(objectName);
