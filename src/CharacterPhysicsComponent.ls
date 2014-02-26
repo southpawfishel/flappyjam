@@ -9,6 +9,8 @@ package
         private var _velocity:Point = new Point(0, 0);
         private var _gravity:Point = new Point(0, 0);
 
+        public static var secondsPerTick = 1.0 / 60.0;
+
         // Velocity getter/setters
         public function set velocityX(vx:Number):void
         {
@@ -53,6 +55,8 @@ package
                 return false;
             }
 
+            secondsPerTick = timeManager.msPerTick / 1000.0;
+
             _transform = owner.lookupComponentByName("transform") as TransformComponent;
 
             Debug.assert(_transform != null, "Physics must have transform component");
@@ -62,8 +66,6 @@ package
 
         public function onTick():void
         {
-            static var secondsPerTick = timeManager.msPerTick / 1000;
-
             // Apply gravity to velocity
             _velocity.x += _gravity.x * secondsPerTick;
             _velocity.y += _gravity.y * secondsPerTick;

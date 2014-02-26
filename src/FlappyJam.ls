@@ -14,6 +14,8 @@ package
 
     import org.gestouch.events.GestureEvent;
     import org.gestouch.gestures.TapGesture;
+    import loom2d.events.TouchEvent;
+    import loom2d.events.TouchPhase;
 
     import loom2d.events.KeyboardEvent;
     import loom.platform.LoomKey;
@@ -46,6 +48,7 @@ package
         override public function run():void
         {
             stage.scaleMode = StageScaleMode.LETTERBOX;
+            //stage.reportFps = true;
 
             var bg = new Image(Texture.fromAsset("assets/bg.png"));
             bg.width = stage.stageWidth;
@@ -88,10 +91,7 @@ package
             pipeSpawnTimer = new Timer(FIRST_PIPE_TIME);
             pipeSpawnTimer.onComplete += spawnPipe;
 
-            tapRecognizer = new TapGesture(stage);
-            tapRecognizer.numTapsRequired = 1;
-            tapRecognizer.addEventListener(GestureEvent.GESTURE_RECOGNIZED, onTap);
-
+            stage.addEventListener(TouchEvent.TOUCH, onTap);
             stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
         }
 
@@ -148,17 +148,15 @@ package
             }
         }
 
-        public function onTap(event:GestureEvent):void
+        public function onTap(event:TouchEvent):void
         {
-            if (!started)
+            // Do nothing if this isn't a touch began event
+            if (event.getTouch(stage, TouchPhase.BEGAN) == null)
             {
-                startGame();
+                return;
             }
-            else
-            {
-                var characterController:FlappyControllerComponent = character.lookupComponentByName("controller") as FlappyControllerComponent;
-                characterController.onTap(event);
-            }
+
+            handleTapInput();
         }
 
         public function keyDownHandler(event:KeyboardEvent):void
@@ -166,7 +164,19 @@ package
             var keycode = event.keyCode;
             if (keycode == LoomKey.SPACEBAR)
             {
-                onTap(null);
+                handleTapInput();
+            }
+        }
+
+        public function handleTapInput():void
+        {
+            if (!started)
+            {
+                startGame();
+            }
+            else
+            {
+                character.controller.onTap();
             }
         }
 
@@ -176,8 +186,7 @@ package
 
             setScore(0);
 
-            var characterController:FlappyControllerComponent = character.lookupComponentByName("controller") as FlappyControllerComponent;
-            characterController.start();
+            character.controller.start();
 
             pipeSpawnTimer.start();
         }
@@ -186,8 +195,7 @@ package
         {
             started = false;
 
-            var characterController:FlappyControllerComponent = character.lookupComponentByName("controller") as FlappyControllerComponent;
-            characterController.reset();
+            character.controller.reset();
 
             for each (var pipe in activePipes)
             {

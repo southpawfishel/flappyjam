@@ -13,135 +13,81 @@ package
         private var _parent:Sprite;
         private var _image:Image;
         private var _texture:Texture;
-        private var _centered:Boolean;
-        private var _pivotX:Number = 0;
-        private var _pivotY:Number = 0;
 
         public function set texture(tex:String):void
         {
             _texture = Texture.fromAsset(tex);
             _texture.smoothing = 0;
-
-            if (_image)
-            {
-                _image.texture = _texture;
-                _image.readjustSize();
-            }
+            _image.texture = _texture;
         }
         
         public function set x(value:int):void
         {
-            if (_image)
-            {
-                _image.x = value;
-            }
+            _image.x = value;
         }
         
         public function set y(value:int):void
         {
-            if (_image)
-            {
-                _image.y = value;
-            }
+            _image.y = value;
         }
 
         public function set position(value:Point):void
         {
-            if (_image)
-            {
-                this.x = value.x;
-                this.y = value.y;
-            }
+            this.x = value.x;
+            this.y = value.y;
         }
 
         public function set alpha(value:Number):void
         {
-            if (_image)
-            {
-                _image.alpha = value;
-            }
+            _image.alpha = value;
         }
 
         public function get width():Number
         {
-            if (_image)
-            {
-                return _image.width;
-            }
+            return _image.width;
         }
 
         public function get height():Number
         {
-            if (_image)
-            {
-                return _image.height;
-            }
+            return _image.height;
         }
 
         public function set width(val:Number):void
         {
-            if (_image)
-            {
-                _image.width = val;
-            }
+            _image.width = val;
         }
 
         public function set height(val:Number):void
         {
-            if (_image)
-            {
-                _image.height = val;
-            }
+            _image.height = val;
         }
 
         public function center():void
         {
-            _centered = true;
-            if (_image)
-            {
-                _image.center();
-            }
-        }
-
-        public function get pivotX():Number
-        {
-            return _pivotX;
-        }
-
-        public function get pivotY():Number
-        {
-            return _pivotY;
+            _image.center();
         }
 
         public function set pivotX(val:Number):void
         {
-            _pivotX = val;
-            if (_image)
-            {
-                _image.pivotX = val;
-            }
+            _image.pivotX = val;
         }
 
         public function set pivotY(val:Number):void
         {
-            _pivotY = val;
-            if (_image)
-            {
-                _image.pivotY = val;
-            }
+            _image.pivotY = val;
         }
 
         public function set rotation(angle:Number):void
         {
-            if (_image)
-            {
-                _image.rotation = angle;
-            }
+            _image.rotation = angle;
         }
 
-        public function ImageComponent(parent:Sprite):void
+        public function ImageComponent(parent:Sprite, texture:String):void
         {
             _parent = parent;
+            
+            _texture = Texture.fromAsset(texture);
+            _texture.smoothing = 0;
         }
         
         public override function onAdd():Boolean
@@ -152,15 +98,6 @@ package
             }
 
             _image = new Image(_texture);
-            if (_centered)
-            {
-                _image.center();
-            }
-            else
-            {
-                _image.pivotX = _pivotX;
-                _image.pivotY = _pivotY;
-            }
             if (_parent)
             {
                 _parent.addChild(_image);

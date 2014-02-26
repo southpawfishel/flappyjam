@@ -11,56 +11,31 @@ package
         [Inject(id="characterLayer")]
         protected var _parentLayer:Sprite;
 
-        protected var _transform:TransformComponent = null;
-        protected var _physics:CharacterPhysicsComponent = null;
-        protected var _collider:CircleColliderComponent = null;
-        protected var _image:ImageComponent = null;
-        protected var _controller:FlappyControllerComponent = null;
-
-        public function get transform():TransformComponent
-        {
-            return _transform;
-        }
-
-        public function get physics():CharacterPhysicsComponent
-        {
-            return _physics;
-        }
-
-        public function get collider():CircleColliderComponent
-        {
-            return _collider;
-        }
-
-        public function get image():ImageComponent
-        {
-            return _image;
-        }
-
-        public function get controller():FlappyControllerComponent
-        {
-            return _controller;
-        }
+        public var transform:TransformComponent = null;
+        public var physics:CharacterPhysicsComponent = null;
+        public var collider:CircleColliderComponent = null;
+        public var image:ImageComponent = null;
+        public var controller:FlappyControllerComponent = null;
 
         public override function initialize(objectName:String = null):void
         {
             super.initialize(objectName);
             
-            _transform = new TransformComponent();
-            addComponent(_transform, "transform");
-            _transform.x = Loom2D.stage.stageWidth / 4;
-            _transform.y = Loom2D.stage.stageHeight / 2;
+            transform = new TransformComponent();
+            addComponent(transform, "transform");
+            transform.x = Loom2D.stage.stageWidth / 4;
+            transform.y = Loom2D.stage.stageHeight / 2;
 
-            _physics = new CharacterPhysicsComponent();
-            addComponent(_physics, "physics");
+            physics = new CharacterPhysicsComponent();
+            addComponent(physics, "physics");
 
-            _image = new ImageComponent(_parentLayer);
-            addComponent(_image, "image");
-            _image.addBinding("position", "@transform.position");
-            _image.texture = "assets/corgi1.png";
-            _image.pivotX = _image.width - 20;
-            _image.pivotY = _image.height / 2;
-            //_image.center();
+            image = new ImageComponent(_parentLayer, "assets/corgi1.png");
+            addComponent(image, "image");
+            image.addBinding("x", "@transform.x");
+            image.addBinding("y", "@transform.y");
+            image.pivotX = image.width - 20;
+            image.pivotY = image.height / 2;
+            //image.center();
 
             // var colliderImage = new ImageComponent(_parentLayer);
             // addComponent(colliderImage, "colliderImage");
@@ -69,12 +44,13 @@ package
             // colliderImage.alpha = 0.5;
             // colliderImage.addBinding("position", "@transform.position");
 
-            _collider = new CircleColliderComponent(15);
-            addComponent(_collider, "collider");
-            _collider.addBinding("position", "@transform.position");
+            collider = new CircleColliderComponent(15);
+            addComponent(collider, "collider");
+            collider.addBinding("x", "@transform.x");
+            collider.addBinding("y", "@transform.y");
 
-            _controller = new FlappyControllerComponent();
-            addComponent(_controller, "controller");
+            controller = new FlappyControllerComponent();
+            addComponent(controller, "controller");
         }
     }
 }

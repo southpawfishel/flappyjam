@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:dab15a47e48ddc07209ffabb6c7daa11:be3b903aeecbb85ee0b54e6b25fd4ea0:ef7663426bf705b25566a93aef3a1571$ -->
+<TextureAtlas imagePath="spritesheet.png">
+    <SubTexture name="bg" x="2" y="2" width="320" height="480"/>
+    <SubTexture name="corgi1" x="522" y="52" width="64" height="32"/>
+    <SubTexture name="corgi2" x="456" y="52" width="64" height="32"/>
+    <SubTexture name="ground" x="456" y="2" width="320" height="48"/>
+    <SubTexture name="pipe_bottom" x="390" y="2" width="64" height="480"/>
+    <SubTexture name="pipe_top" x="324" y="2" width="64" height="480"/>
+</TextureAtlas>

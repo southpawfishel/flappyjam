@@ -44,7 +44,7 @@ package
             return true;
         }
 
-        public function onTap(event:GestureEvent):void
+        public function onTap():void
         {
             if (!_started)
             {

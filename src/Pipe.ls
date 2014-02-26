@@ -11,50 +11,31 @@ package
         [Inject(id="pipeLayer")]
         protected var _parentLayer:Sprite;
 
-        protected var _transform:TransformComponent = null;
-        protected var _image:ImageComponent = null;
-        protected var _collider:RectangleColliderComponent = null;
-        protected var _mover:PipeMoverComponent = null;
-
-        public function get transform():TransformComponent
-        {
-            return _transform;
-        }
-
-        public function get image():ImageComponent
-        {
-            return _image;
-        }
-
-        public function get collider():RectangleColliderComponent
-        {
-            return _collider;
-        }
-
-        public function get mover():PipeMoverComponent
-        {
-            return _mover;
-        }
+        public var transform:TransformComponent = null;
+        public var image:ImageComponent = null;
+        public var collider:RectangleColliderComponent = null;
+        public var mover:PipeMoverComponent = null;
 
         public override function initialize(objectName:String = null):void
         {
             super.initialize(objectName);
             
-            _transform = new TransformComponent();
-            _transform.x = -PIPE_WIDTH;
-            addComponent(_transform, "transform");
+            transform = new TransformComponent();
+            addComponent(transform, "transform");
+            transform.x = -PIPE_WIDTH;
 
-            _image = new ImageComponent(_parentLayer);
-            _image.texture = "assets/pipe_top.png";
-            _image.addBinding("position", "@transform.position");
-            addComponent(_image, "image");
+            image = new ImageComponent(_parentLayer, "assets/pipe_top.png");
+            addComponent(image, "image");
+            image.addBinding("x", "@transform.x");
+            image.addBinding("y", "@transform.y");
 
-            _collider = new RectangleColliderComponent(PIPE_WIDTH, PIPE_HEIGHT);
-            _collider.addBinding("position", "@transform.position");
-            addComponent(_collider, "collider");
+            collider = new RectangleColliderComponent(PIPE_WIDTH, PIPE_HEIGHT);
+            addComponent(collider, "collider");
+            collider.addBinding("x", "@transform.x");
+            collider.addBinding("y", "@transform.y");
 
-            _mover = new PipeMoverComponent();
-            addComponent(_mover, "mover");
+            mover = new PipeMoverComponent();
+            addComponent(mover, "mover");
         }
     }
 }

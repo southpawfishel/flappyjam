@@ -10,6 +10,8 @@ package
         private var _transform:TransformComponent = null;
         public var offscreen:Boolean = true;
 
+        public static var secondsPerTick = 1.0 / 60.0;
+
         public function get passedPlayer():Boolean
         {
             return _passedPlayer;
@@ -27,6 +29,8 @@ package
                 return false;
             }
 
+            secondsPerTick = timeManager.msPerTick / 1000.0;
+
             _transform = owner.lookupComponentByName("transform") as TransformComponent;
 
             Debug.assert(_transform != null, "Pipe Mover must have transform component");
@@ -40,8 +44,6 @@ package
             {
                 return;
             }
-
-            static var secondsPerTick = timeManager.msPerTick / 1000;
 
             _transform.x -= SPEED * secondsPerTick;
         }
