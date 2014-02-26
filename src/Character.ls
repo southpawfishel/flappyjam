@@ -14,7 +14,7 @@ package
         public var transform:TransformComponent = null;
         public var physics:CharacterPhysicsComponent = null;
         public var collider:CircleColliderComponent = null;
-        public var image:ImageComponent = null;
+        public var image:AtlasSpriteComponent = null;
         public var controller:FlappyControllerComponent = null;
 
         public override function initialize(objectName:String = null):void
@@ -29,7 +29,7 @@ package
             physics = new CharacterPhysicsComponent();
             addComponent(physics, "physics");
 
-            image = new ImageComponent(_parentLayer, "assets/corgi1.png");
+            image = new AtlasSpriteComponent(_parentLayer, "spritesheet", "corgi1");
             addComponent(image, "image");
             image.addBinding("x", "@transform.x");
             image.addBinding("y", "@transform.y");
@@ -37,12 +37,12 @@ package
             image.pivotY = image.height / 2;
             //image.center();
 
-            // var colliderImage = new ImageComponent(_parentLayer);
+            // var colliderImage = new AtlasSpriteComponent(_parentLayer, "spritesheet", "circle30");
             // addComponent(colliderImage, "colliderImage");
-            // colliderImage.texture = "assets/circle30.png";
             // colliderImage.center();
             // colliderImage.alpha = 0.5;
-            // colliderImage.addBinding("position", "@transform.position");
+            // colliderImage.addBinding("x", "@transform.x");
+            // colliderImage.addBinding("y", "@transform.y");
 
             collider = new CircleColliderComponent(15);
             addComponent(collider, "collider");

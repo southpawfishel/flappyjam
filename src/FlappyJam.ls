@@ -7,6 +7,8 @@ package
     import loom2d.display.Sprite;
     import loom2d.display.Image;
     import loom2d.ui.SimpleLabel;
+    import loom2d.ui.TextureAtlasManager;
+    import loom2d.ui.TextureAtlasSprite;
     import loom2d.textures.Texture;
     import loom2d.math.Point;
     import loom2d.math.Rectangle;
@@ -50,7 +52,11 @@ package
             stage.scaleMode = StageScaleMode.LETTERBOX;
             //stage.reportFps = true;
 
-            var bg = new Image(Texture.fromAsset("assets/bg.png"));
+            TextureAtlasManager.register("spritesheet", "assets/spritesheet.xml");
+
+            var bg = new TextureAtlasSprite();
+            bg.atlasName = "spritesheet";
+            bg.textureName = "bg";
             bg.width = stage.stageWidth;
             bg.height = stage.stageHeight;
             stage.addChild(bg);
@@ -71,7 +77,9 @@ package
             stage.addChild(uiLayer);
             group.registerManager(uiLayer, null, "uiLayer");
 
-            var ground = new Image(Texture.fromAsset("assets/ground.png"));
+            var ground = new TextureAtlasSprite();
+            ground.atlasName = "spritesheet";
+            ground.textureName = "ground";
             ground.y = stage.stageHeight - ground.height;
             groundLayer.addChild(ground);
 
@@ -230,7 +238,7 @@ package
             topPipe.transform.y = pipeY - (PIPE_GAP / 2) - Pipe.PIPE_HEIGHT;
             topPipe.image.x = topPipe.transform.x;
             topPipe.image.y = topPipe.transform.y;
-            topPipe.image.texture = "assets/pipe_top.png";
+            topPipe.image.texture = "pipe_top";
             topPipe.mover.passedPlayer = false;
             topPipe.mover.offscreen = false;
             activePipes.pushSingle(topPipe);
@@ -240,7 +248,7 @@ package
             bottomPipe.transform.y = pipeY + (PIPE_GAP / 2);
             bottomPipe.image.x = bottomPipe.transform.x;
             bottomPipe.image.y = bottomPipe.transform.y;
-            bottomPipe.image.texture = "assets/pipe_bottom.png";
+            bottomPipe.image.texture = "pipe_bottom";
             bottomPipe.mover.passedPlayer = false;
             bottomPipe.mover.offscreen = false;
             activePipes.pushSingle(bottomPipe);

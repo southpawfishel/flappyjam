@@ -12,7 +12,7 @@ package
         protected var _parentLayer:Sprite;
 
         public var transform:TransformComponent = null;
-        public var image:ImageComponent = null;
+        public var image:AtlasSpriteComponent = null;
         public var collider:RectangleColliderComponent = null;
         public var mover:PipeMoverComponent = null;
 
@@ -24,7 +24,7 @@ package
             addComponent(transform, "transform");
             transform.x = -PIPE_WIDTH;
 
-            image = new ImageComponent(_parentLayer, "assets/pipe_top.png");
+            image = new AtlasSpriteComponent(_parentLayer, "spritesheet", "pipe_top");
             addComponent(image, "image");
             image.addBinding("x", "@transform.x");
             image.addBinding("y", "@transform.y");

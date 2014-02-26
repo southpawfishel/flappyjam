@@ -19,7 +19,7 @@ package
         private var _transform:TransformComponent = null;
         private var _physics:CharacterPhysicsComponent = null;
         private var _collider:CircleColliderComponent = null;
-        private var _image:ImageComponent = null;
+        private var _image:AtlasSpriteComponent = null;
 
         private var tickCount = 0;
         private var frameNum = 0;
@@ -34,7 +34,7 @@ package
             _transform = owner.lookupComponentByName("transform") as TransformComponent;
             _physics = owner.lookupComponentByName("physics") as CharacterPhysicsComponent;
             _collider = owner.lookupComponentByName("collider") as CircleColliderComponent;
-            _image = owner.lookupComponentByName("image") as ImageComponent;
+            _image = owner.lookupComponentByName("image") as AtlasSpriteComponent;
 
             Debug.assert(_transform != null, "Character must have transform component");
             Debug.assert(_physics != null, "Character must have physics component");
@@ -97,7 +97,7 @@ package
                 tickCount = 0;
                 ++frameNum;
                 frameNum %= 2;
-                _image.texture = "assets/corgi" + (frameNum+1) + ".png";
+                _image.texture = "corgi" + (frameNum+1);
             }
         }
 
