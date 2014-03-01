@@ -1,9 +1,9 @@
 package
 {
-    import loom.gameframework.TickedComponent;
+    import loom.gameframework.LoomComponent;
     import loom2d.math.Point;
 
-    public class CircleColliderComponent extends TickedComponent
+    public class CircleColliderComponent extends LoomComponent
     {
         private var _collider:Circle;
 

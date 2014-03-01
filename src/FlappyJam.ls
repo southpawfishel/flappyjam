@@ -108,14 +108,17 @@ package
             var scoredThisFrame:Boolean = false;
 
             var characterCircle:Circle = character.collider.circle;
-            var charX:Number = character.transform.x;
+            characterCircle.center.x = character.transform.node.x;
+            characterCircle.center.y = character.transform.node.y;
+            var pipeRect:Rectangle = new Rectangle(0, 0, Pipe.PIPE_WIDTH, Pipe.PIPE_HEIGHT);
+            var charX:Number = character.transform.node.x;
 
             for each (var pipe:Pipe in activePipes)
             {
                 if (pipe.mover.passedPlayer)
                 {
                     // Despawn pipes that have moved offscreen
-                    if (pipe.transform.x < -Pipe.PIPE_WIDTH)
+                    if (pipe.transform.node.x < -Pipe.PIPE_WIDTH)
                     {
                         pipe.mover.offscreen = true;
                         deadPipes.pushSingle(pipe);
@@ -125,7 +128,8 @@ package
                 else
                 {
                     // If character hit pipe, game is over
-                    var pipeRect:Rectangle = pipe.collider.rectangle;
+                    pipeRect.x = pipe.transform.node.x;
+                    pipeRect.y = pipe.transform.node.y;
                     if (Collision.circleToAABB(characterCircle, pipeRect))
                     {
                         resetGame();
@@ -133,7 +137,7 @@ package
                     }
 
                     // Score pipes that have passed the player
-                    var pipeX:Number = pipe.transform.x;
+                    var pipeX:Number = pipe.transform.node.x;
                     var pipeCounted:Boolean = pipe.mover.passedPlayer;
                     var passedPlayer = pipeX + Pipe.PIPE_WIDTH < charX - characterCircle.radius;
                     if (!pipeCounted && passedPlayer)
@@ -149,7 +153,7 @@ package
             }
 
             // If character hit ground, game is over
-            var charY:Number = character.transform.y;
+            var charY:Number = character.transform.node.y;
             if (charY + characterCircle.radius > GROUND_Y)
             {
                 resetGame();
@@ -209,7 +213,7 @@ package
             {
                 pipe.mover.offscreen = true;
                 pipe.mover.passedPlayer = true; 
-                pipe.transform.x = stage.stageWidth;
+                pipe.transform.node.x = stage.stageWidth;
                 deadPipes.pushSingle(pipe);
             }
             activePipes.clear();
@@ -234,20 +238,16 @@ package
             var pipeY = Math.randomRange(PIPE_TOP_Y, PIPE_BOTTOM_Y);
 
             var topPipe = getOrDequeuePipe();
-            topPipe.transform.x = stage.stageWidth;
-            topPipe.transform.y = pipeY - (PIPE_GAP / 2) - Pipe.PIPE_HEIGHT;
-            topPipe.image.x = topPipe.transform.x;
-            topPipe.image.y = topPipe.transform.y;
+            topPipe.transform.node.x = stage.stageWidth;
+            topPipe.transform.node.y = pipeY - (PIPE_GAP / 2) - Pipe.PIPE_HEIGHT;
             topPipe.image.texture = "pipe_top";
             topPipe.mover.passedPlayer = false;
             topPipe.mover.offscreen = false;
             activePipes.pushSingle(topPipe);
 
             var bottomPipe = getOrDequeuePipe();
-            bottomPipe.transform.x = stage.stageWidth;
-            bottomPipe.transform.y = pipeY + (PIPE_GAP / 2);
-            bottomPipe.image.x = bottomPipe.transform.x;
-            bottomPipe.image.y = bottomPipe.transform.y;
+            bottomPipe.transform.node.x = stage.stageWidth;
+            bottomPipe.transform.node.y = pipeY + (PIPE_GAP / 2);
             bottomPipe.image.texture = "pipe_bottom";
             bottomPipe.mover.passedPlayer = false;
             bottomPipe.mover.offscreen = false;

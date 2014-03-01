@@ -1,10 +1,10 @@
 package
 {
-    import loom.gameframework.TickedComponent;
+    import loom.gameframework.LoomComponent;
     import loom2d.math.Point;
     import loom2d.math.Rectangle;
 
-    public class RectangleColliderComponent extends TickedComponent
+    public class RectangleColliderComponent extends LoomComponent
     {
         private var _collider:Rectangle;
 

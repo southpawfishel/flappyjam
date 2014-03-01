@@ -8,8 +8,9 @@ package
     import loom2d.Loom2D;
     import loom2d.math.Point;
     import loom.gameframework.AnimatedComponent;
+    import loom.gameframework.LoomComponent;
 
-    class ImageComponent extends AnimatedComponent
+    class ImageComponent extends LoomComponent
     {
         private var _parent:Sprite;
         private var _image:Image;
@@ -108,8 +109,6 @@ package
                 Loom2D.stage.addChild(_image);
             }
 
-            onFrame();
-
             return true;
         }
         
@@ -121,7 +120,7 @@ package
         }
     }
 
-    class AtlasSpriteComponent extends AnimatedComponent
+    class AtlasSpriteComponent extends LoomComponent
     {
         private var _parent:Sprite;
         private var _image:TextureAtlasSprite;
@@ -215,8 +214,6 @@ package
             {
                 Loom2D.stage.addChild(_image);
             }
-
-            onFrame();
 
             return true;
         }

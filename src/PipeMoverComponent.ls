@@ -45,7 +45,7 @@ package
                 return;
             }
 
-            _transform.x -= SPEED * secondsPerTick;
+            _transform.node.x -= SPEED * secondsPerTick;
         }
     }
 }

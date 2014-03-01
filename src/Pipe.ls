@@ -20,19 +20,15 @@ package
         {
             super.initialize(objectName);
             
-            transform = new TransformComponent();
+            transform = new TransformComponent(_parentLayer);
             addComponent(transform, "transform");
-            transform.x = -PIPE_WIDTH;
+            transform.node.x = -PIPE_WIDTH;
 
-            image = new AtlasSpriteComponent(_parentLayer, "spritesheet", "pipe_top");
+            image = new AtlasSpriteComponent(transform.node, "spritesheet", "pipe_top");
             addComponent(image, "image");
-            image.addBinding("x", "@transform.x");
-            image.addBinding("y", "@transform.y");
 
             collider = new RectangleColliderComponent(PIPE_WIDTH, PIPE_HEIGHT);
             addComponent(collider, "collider");
-            collider.addBinding("x", "@transform.x");
-            collider.addBinding("y", "@transform.y");
 
             mover = new PipeMoverComponent();
             addComponent(mover, "mover");

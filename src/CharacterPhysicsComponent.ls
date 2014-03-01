@@ -72,8 +72,8 @@ package
             //trace(_velocity);
 
             // Apply velocity to position
-            _transform.x += _velocity.x * secondsPerTick;
-            _transform.y += _velocity.y * secondsPerTick;
+            _transform.node.x += _velocity.x * secondsPerTick;
+            _transform.node.y += _velocity.y * secondsPerTick;
             //trace(_position);
         }
     }

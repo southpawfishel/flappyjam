@@ -73,9 +73,9 @@ package
         private function onTick():void
         {
             // Don't move too far off the top of the screen
-            if (_transform.y < OFFSCREEN_CUTOFF_Y)
+            if (_transform.node.y < OFFSCREEN_CUTOFF_Y)
             {
-                _transform.y = OFFSCREEN_CUTOFF_Y;
+                _transform.node.y = OFFSCREEN_CUTOFF_Y;
             }
 
             // Rotate character according to physics
@@ -85,9 +85,9 @@ package
                 t = -1 * _physics.velocityY / 500;
                 _image.rotation = Math.degToRad(-1 * easeOut(t) * 30.0);
             }
-            else
+            else if (_physics.velocityY > 200)
             {
-                t = Math.clamp((_physics.velocityY / 900) + 0.2, 0, 1);
+                t = Math.clamp((_physics.velocityY - 300) / 500, 0, 1);
                 _image.rotation = Math.degToRad(easeIn(t) * 60.0);
             }
 
@@ -111,9 +111,10 @@ package
         public function reset():void
         {
             _started = false;
-            _transform.y = Loom2D.stage.stageHeight / 2;
+            _transform.node.y = Loom2D.stage.stageHeight / 2;
             _physics.velocity = new Point(0, 0);
             _physics.gravity = new Point(0, 0);
+            _image.rotation = 0;
         }
     }
 }

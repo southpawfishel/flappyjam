@@ -21,33 +21,27 @@ package
         {
             super.initialize(objectName);
             
-            transform = new TransformComponent();
+            transform = new TransformComponent(_parentLayer);
             addComponent(transform, "transform");
-            transform.x = Loom2D.stage.stageWidth / 4;
-            transform.y = Loom2D.stage.stageHeight / 2;
+            transform.node.x = Loom2D.stage.stageWidth / 4;
+            transform.node.y = Loom2D.stage.stageHeight / 2;
 
             physics = new CharacterPhysicsComponent();
             addComponent(physics, "physics");
 
-            image = new AtlasSpriteComponent(_parentLayer, "spritesheet", "corgi1");
+            image = new AtlasSpriteComponent(transform.node, "spritesheet", "corgi1");
             addComponent(image, "image");
-            image.addBinding("x", "@transform.x");
-            image.addBinding("y", "@transform.y");
             image.pivotX = image.width - 20;
             image.pivotY = image.height / 2;
             //image.center();
 
-            // var colliderImage = new AtlasSpriteComponent(_parentLayer, "spritesheet", "circle30");
+            // var colliderImage = new AtlasSpriteComponent(transform.node, "spritesheet", "circle30");
             // addComponent(colliderImage, "colliderImage");
             // colliderImage.center();
             // colliderImage.alpha = 0.5;
-            // colliderImage.addBinding("x", "@transform.x");
-            // colliderImage.addBinding("y", "@transform.y");
 
             collider = new CircleColliderComponent(15);
             addComponent(collider, "collider");
-            collider.addBinding("x", "@transform.x");
-            collider.addBinding("y", "@transform.y");
 
             controller = new FlappyControllerComponent();
             addComponent(controller, "controller");

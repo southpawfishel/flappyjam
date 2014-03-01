@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:dab15a47e48ddc07209ffabb6c7daa11:be3b903aeecbb85ee0b54e6b25fd4ea0:ef7663426bf705b25566a93aef3a1571$ -->
+<!-- $TexturePacker:SmartUpdate:f32ffb6cdf1fe6d789817905b0ef1913:0df624fc30eaf82f224ffb9f68eaff72:ef7663426bf705b25566a93aef3a1571$ -->
 <TextureAtlas imagePath="spritesheet.png">
     <SubTexture name="bg" x="2" y="2" width="320" height="480"/>
     <SubTexture name="corgi1" x="522" y="52" width="64" height="32"/>
