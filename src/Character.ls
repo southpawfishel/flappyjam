@@ -12,7 +12,6 @@ package
         protected var _parentLayer:Sprite;
 
         public var transform:TransformComponent = null;
-        public var physics:CharacterPhysicsComponent = null;
         public var collider:CircleColliderComponent = null;
         public var image:AtlasSpriteComponent = null;
         public var controller:FlappyControllerComponent = null;
@@ -25,9 +24,6 @@ package
             addComponent(transform, "transform");
             transform.node.x = Loom2D.stage.stageWidth / 4;
             transform.node.y = Loom2D.stage.stageHeight / 2;
-
-            physics = new CharacterPhysicsComponent();
-            addComponent(physics, "physics");
 
             image = new AtlasSpriteComponent(transform.node, "spritesheet", "corgi1");
             addComponent(image, "image");

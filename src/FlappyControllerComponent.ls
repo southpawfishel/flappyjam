@@ -14,15 +14,19 @@ package
         private static var OFFSCREEN_CUTOFF_Y:Number = -50;
         private static var TICKS_PER_ANIM_FRAME = 5;
 
+        private var _velocity:Point = new Point(0, 0);
+        private var _gravity:Point = new Point(0, 0);
+
         private var _started:Boolean = false;
 
         private var _transform:TransformComponent = null;
-        private var _physics:CharacterPhysicsComponent = null;
         private var _collider:CircleColliderComponent = null;
         private var _image:AtlasSpriteComponent = null;
 
-        private var tickCount = 0;
-        private var frameNum = 0;
+        private var _tickCount = 0;
+        private var _frameNum = 0;
+
+        private static var secondsPerTick = 1.0 / 60.0;
 
         public override function onAdd():Boolean
         {
@@ -32,14 +36,14 @@ package
             }
 
             _transform = owner.lookupComponentByName("transform") as TransformComponent;
-            _physics = owner.lookupComponentByName("physics") as CharacterPhysicsComponent;
             _collider = owner.lookupComponentByName("collider") as CircleColliderComponent;
             _image = owner.lookupComponentByName("image") as AtlasSpriteComponent;
 
             Debug.assert(_transform != null, "Character must have transform component");
-            Debug.assert(_physics != null, "Character must have physics component");
             Debug.assert(_collider != null, "Character must have collider component");
             Debug.assert(_image != null, "Character must have image component");
+
+            secondsPerTick = timeManager.msPerTick / 1000.0;
 
             return true;
         }
@@ -56,7 +60,7 @@ package
 
         private function jump():void
         {
-            _physics.velocityY = JUMP_VELOCITY;
+            _velocity.y = JUMP_VELOCITY;
         }
 
         private static function easeOut(ratio:Number):Number
@@ -72,39 +76,62 @@ package
 
         private function onTick():void
         {
+            updateMovement();
+
+            updateRotation();
+
+            updateAnimationFrame();
+        }
+
+        public function updateMovement():void
+        {
+            // Apply gravity to velocity
+            _velocity.x += _gravity.x * secondsPerTick;
+            _velocity.y += _gravity.y * secondsPerTick;
+
+            // Apply velocity to position
+            _transform.node.x += _velocity.x * secondsPerTick;
+            _transform.node.y += _velocity.y * secondsPerTick;
+
             // Don't move too far off the top of the screen
             if (_transform.node.y < OFFSCREEN_CUTOFF_Y)
             {
                 _transform.node.y = OFFSCREEN_CUTOFF_Y;
             }
+        }
 
+        public function updateRotation():void
+        {
             // Rotate character according to physics
             var t = 0;
-            if (_physics.velocityY < 0)
+            if (_velocity.y < 0)
             {
-                t = -1 * _physics.velocityY / 500;
+                t = -1 * _velocity.y / 500;
                 _image.rotation = Math.degToRad(-1 * easeOut(t) * 30.0);
             }
-            else if (_physics.velocityY > 200)
+            else if (_velocity.y > 200)
             {
-                t = Math.clamp((_physics.velocityY - 300) / 500, 0, 1);
+                t = Math.clamp((_velocity.y - 300) / 500, 0, 1);
                 _image.rotation = Math.degToRad(easeIn(t) * 60.0);
             }
+        }
 
+        public function updateAnimationFrame():void
+        {
             // Update animation
-            if (tickCount++ > TICKS_PER_ANIM_FRAME)
+            if (_tickCount++ > TICKS_PER_ANIM_FRAME)
             {
-                tickCount = 0;
-                ++frameNum;
-                frameNum %= 2;
-                _image.texture = "corgi" + (frameNum+1);
+                _tickCount = 0;
+                ++_frameNum;
+                _frameNum %= 2;
+                _image.texture = "corgi" + (_frameNum+1);
             }
         }
 
         public function start():void
         {
             _started = true;
-            _physics.gravity = new Point(0, GRAVITY);
+            _gravity = new Point(0, GRAVITY);
             jump();
         }
 
@@ -112,8 +139,8 @@ package
         {
             _started = false;
             _transform.node.y = Loom2D.stage.stageHeight / 2;
-            _physics.velocity = new Point(0, 0);
-            _physics.gravity = new Point(0, 0);
+            _velocity = new Point(0, 0);
+            _gravity = new Point(0, 0);
             _image.rotation = 0;
         }
     }
